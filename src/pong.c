@@ -56,7 +56,6 @@ int main() {
         exit(1);
     }
 
-
     int quit = 0;
     SDL_Event event;
 
