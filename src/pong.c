@@ -4,19 +4,6 @@ const int WIDTH = 640;
 const int HEIGHT = 480;
 const int BALL_SIZE = 10;
 
-typedef struct Ball {
-    float x;
-    float y;
-    float xSpeed;
-    float ySpeed;
-    int size;
-} Ball;
-
-typedef struct Player {
-    int score;
-    float yPosition;
-} Player;
-
 const int PLAYER_WIDTH = 20;
 const int PLAYER_HEIGHT = 75;
 const int PLAYER_MARGIN = 10;
@@ -31,22 +18,6 @@ Player player2;
 
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
-
-int Initialize();
-void Update(float elapsed);
-void Shutdown();
-
-int CoinFlip();
-
-Ball MakeBall(int size);
-void UpdateBall(Ball * ball, float elapsed);
-void RenderBall(const Ball *ball);
-
-Player MakePlayer();
-void UpdatePlayers(float elapsed);
-void RenderPlayers();
-
-void UpdateScore(int player, int points);
 
 int main() {
     srand((unsigned int)time(NULL));
@@ -106,7 +77,7 @@ int Initialize() {
         return 0;
     }
 
-    ball = MakeBall(BALL_SIZE);
+    ball = MakeBall();
     player1 = MakePlayer();
     player2 = MakePlayer();
 
@@ -117,8 +88,8 @@ void Update(float elapsed) {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
 
-    UpdateBall(&ball, elapsed);
-    RenderBall(&ball);
+    UpdateBall(served, &ball, elapsed);
+    RenderBall(renderer, &ball);
 
     UpdatePlayers(elapsed);
     RenderPlayers();
@@ -143,61 +114,6 @@ void Shutdown() {
 
 int CoinFlip() {
     return rand() % 2 == 1 ? 1 : 0;
-}
-
-Ball MakeBall(int size) {
-    const float SPEED = 120;
-    Ball ball = {
-        .x = WIDTH / 2 - size / 2,
-        .y = HEIGHT / 2 - size / 2,
-        .size = size,
-        .xSpeed = SPEED * (CoinFlip() ? 1 : -1),
-        .ySpeed = SPEED * (CoinFlip() ? 1 : -1),
-    };
-
-    return ball;
-}
-
-void RenderBall(const Ball *ball) {
-    int size = ball->size;
-    int halfSize = size / 2;
-    SDL_Rect rect = {
-        .x = ball->x - halfSize,
-        .y = ball->y - halfSize,
-        .w = size,
-        .h = size,
-    };
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    SDL_RenderFillRect(renderer, &rect);
-}
-
-void UpdateBall(Ball * ball, float elapsed) {
-    if (!served) {
-        ball->x = WIDTH / 2;
-        ball->y = HEIGHT / 2;
-        return;
-    }
-
-    ball->x += ball->xSpeed * elapsed;
-    ball->y += ball->ySpeed * elapsed;
-
-    if (ball->x < BALL_SIZE / 2) {
-        // ball->xSpeed = fabs(ball->xSpeed);
-        UpdateScore(2, 1);
-    }
-
-    if (ball->x > WIDTH - BALL_SIZE / 2) {
-        // ball->xSpeed = -fabs(ball->xSpeed);
-        UpdateScore(1, 1);
-    }
-
-    if (ball->y < BALL_SIZE / 2) {
-        ball->ySpeed = fabs(ball->ySpeed);
-    }
-
-    if (ball->y > HEIGHT - BALL_SIZE / 2) {
-        ball->ySpeed = -fabs(ball->ySpeed);
-    }
 }
 
 Player MakePlayer() {
