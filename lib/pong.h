@@ -1,5 +1,5 @@
-#ifndef CELESTIAL_H
-#define CELESTIAL_H
+#ifndef PONG_H
+#define PONG_H
 
 #include <SDL2/SDL.h>
 
@@ -24,7 +24,7 @@ int CoinFlip();
 
 Ball MakeBall();
 void UpdateBall(int served, Ball * ball, float elapsed);
-void RenderBall(SDL_Renderer *renderer, const Ball *ball);
+void RenderBall(const Ball *ball);
 
 Player MakePlayer();
 void UpdatePlayers(float elapsed);

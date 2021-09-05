@@ -2,7 +2,9 @@
 
 extern const int WIDTH;
 extern const int HEIGHT;
-extern const int BALL_SIZE;
+extern SDL_Renderer *renderer;
+
+const int BALL_SIZE = 10;
 
 Ball MakeBall(int size) {
     const float SPEED = 120;
@@ -17,7 +19,7 @@ Ball MakeBall(int size) {
     return ball;
 }
 
-void RenderBall(SDL_Renderer *renderer, const Ball *ball) {
+void RenderBall(const Ball *ball) {
     int size = ball->size;
     int halfSize = size / 2;
     SDL_Rect rect = {
